@@ -48,10 +48,20 @@ def right_move_sonic():
     sonic.clip_draw(300 + gFrame * 38, 1438, 35, 45, x, TUK_HEIGHT // 2, 90, 100)
     pass
 
-def RenderingSonic():
+def left_move_sonic():
     global x_dir, gFrame
-    #not_move_sonic()
-    right_move_sonic()
+    sonic.clip_composite_draw(300 + gFrame * 38, 1438, 35, 45, 0, 'h', x, TUK_HEIGHT // 2, 90, 100)
+    pass
+
+def RenderingSonic():
+    global x_dir
+
+    if x_dir == 0:
+        not_move_sonic()
+    if x_dir == 1:
+        right_move_sonic()
+    if x_dir == -1:
+        left_move_sonic()
     pass
 
 while gRunning:
