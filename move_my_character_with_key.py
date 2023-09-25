@@ -10,6 +10,11 @@ sonic = load_image('sonic.png')
 # 850 x 1504
 # 대충 35 x 45
 
+gRunning = True
+gFrame = 0
+x_dir = 0
+x = TUK_WIDTH // 2
+
 
 def handle_events():
     global gRunning, x_dir
@@ -18,29 +23,47 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             gRunning = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            gRunning = False
+        elif event.type == SDL_KEYDOWN:
+            if event.key == SDLK_RIGHT:
+                x_dir += 1
+            elif event.key == SDLK_LEFT:
+                x_dir -= 1
+            elif event.key == SDLK_ESCAPE:
+                gRunning = False
+
+        elif event.type == SDL_KEYUP:
+            if event.key == SDLK_RIGHT:
+                x_dir -= 1
+            elif event.key == SDLK_LEFT:
+                x_dir += 1
 
 
-gRunning = True
-gFrame = 0
-x_dir = 0
-x = TUK_WIDTH // 2
+
 
 def not_move_sonic():
     sonic.clip_draw(220, 1439, 35, 45, x, TUK_HEIGHT // 2, 90, 100)
     pass
+def right_move_sonic():
+    global x_dir, gFrame
+    sonic.clip_draw(300 + gFrame * 38, 1438, 35, 45, x, TUK_HEIGHT // 2, 90, 100)
+    pass
 
+def RenderingSonic():
+    global x_dir, gFrame
+    #not_move_sonic()
+    right_move_sonic()
+    pass
 
 while gRunning:
     clear_canvas()
     tuk_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-    not_move_sonic()
-    update_canvas()
+
     handle_events()
-    if not gRunning:
-        break
-    gFrame = (gFrame + 1) % 8
+
+    RenderingSonic()
+    update_canvas()
+    gFrame = (gFrame + 1) % 9
+    x += x_dir * 8
     delay(0.05)
 
 close_canvas()
