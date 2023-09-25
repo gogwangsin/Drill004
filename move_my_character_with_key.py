@@ -12,12 +12,13 @@ sonic = load_image('sonic.png')
 
 gRunning = True
 gFrame = 0
+gSpeed = 8
 x_dir = 0
 x = TUK_WIDTH // 2
 
 
 def handle_events():
-    global gRunning, x_dir
+    global gRunning, x_dir, x
 
     events = get_events()
     for event in events:
@@ -25,7 +26,8 @@ def handle_events():
             gRunning = False
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_RIGHT:
-                x_dir += 1
+                x_dir += 1 # 한번만 들어옴
+
             elif event.key == SDLK_LEFT:
                 x_dir -= 1
             elif event.key == SDLK_ESCAPE:
@@ -44,12 +46,16 @@ def not_move_sonic():
     sonic.clip_draw(220, 1439, 35, 45, x, TUK_HEIGHT // 2, 90, 100)
     pass
 def right_move_sonic():
-    global x_dir, gFrame
+    global x_dir, gFrame, x, gSpeed
+    if x + gSpeed > TUK_WIDTH-1-35:
+        x -= gSpeed
     sonic.clip_draw(300 + gFrame * 38, 1438, 35, 45, x, TUK_HEIGHT // 2, 90, 100)
     pass
 
 def left_move_sonic():
-    global x_dir, gFrame
+    global x_dir, gFrame, x, gSpeed
+    if x - gSpeed < 0 + 35:
+        x += gSpeed
     sonic.clip_composite_draw(300 + gFrame * 38, 1438, 35, 45, 0, 'h', x, TUK_HEIGHT // 2, 90, 100)
     pass
 
@@ -73,7 +79,7 @@ while gRunning:
     RenderingSonic()
     update_canvas()
     gFrame = (gFrame + 1) % 9
-    x += x_dir * 8
+    x += x_dir * gSpeed
     delay(0.05)
 
 close_canvas()
